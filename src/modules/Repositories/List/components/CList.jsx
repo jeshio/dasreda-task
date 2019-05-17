@@ -19,8 +19,8 @@ const Footer = styled.div`
 	color: #999;
 `;
 
-function CList({ loading, error, items }) {
-	if (loading) return 'Загрузка...';
+function CList({ loading, error, items, loadingComponent }) {
+	if (loading) return loadingComponent;
 	if (error) return `Ошибка загрузки! ${error.message}`;
 
 	return (
@@ -52,6 +52,7 @@ CList.propTypes = {
 	loading: PropTypes.bool.isRequired,
 	error: PropTypes.object,
 	items: PropTypes.arrayOf(PropTypes.object),
+	loadingComponent: PropTypes.node,
 };
 
 export default CList;

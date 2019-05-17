@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import CList from './components/CList';
+import CLoading from './components/CLoading';
 
 export default class Presentation extends PureComponent {
 	static propTypes = {
@@ -11,7 +12,7 @@ export default class Presentation extends PureComponent {
 		const { repositoriesList } = this.props;
 		return (
 			<div>
-				<CList {...repositoriesList} />
+				<CList {...repositoriesList} loadingComponent={<CLoading />} />
 			</div>
 		);
 	}
