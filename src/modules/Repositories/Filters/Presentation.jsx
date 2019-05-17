@@ -2,14 +2,22 @@ import React, { PureComponent } from 'react';
 import CLicense from './components/CLicense';
 import styled from 'styled-components';
 import CName from './components/CName';
+import mediaDevices from 'src/styles/mediaDevices';
 
 const Root = styled.div`
-	padding: 1rem 0;
-	display: flex;
+	@media ${mediaDevices.mobileL} {
+		padding: 1rem 0;
+		display: flex;
+
+		& > * {
+			flex: 1;
+			max-width: 25rem;
+		}
+	}
 `;
 
 const Field = styled.div`
-	padding: 0 0.25rem;
+	padding: 0.25rem;
 `;
 
 export default class Presentation extends PureComponent {

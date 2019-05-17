@@ -3,14 +3,7 @@ import PropTypes from 'prop-types';
 import { Input } from 'rsuite';
 
 function CLicense({ value, onChange }) {
-	return (
-		<Input
-			style={{ width: 300 }}
-			placeholder="Лицензия..."
-			onChange={onChange}
-			value={value}
-		/>
-	);
+	return <Input placeholder="Лицензия..." onChange={onChange} value={value} />;
 }
 
 CLicense.propTypes = {

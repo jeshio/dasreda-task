@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import mediaDevices from 'src/styles/mediaDevices';
 
 const Root = styled.div``;
 const ListItem = styled.div`
@@ -9,14 +10,19 @@ const ListItem = styled.div`
 `;
 const Name = styled.h3`
 	margin: 0;
+	text-overflow: ellipsis;
+	overflow: hidden;
 `;
 const Description = styled.p`
 	padding: 0.5rem 1rem;
 `;
 const Footer = styled.div`
-	display: flex;
-	justify-content: space-between;
 	color: #999;
+
+	@media ${mediaDevices.mobileL} {
+		display: flex;
+		justify-content: space-between;
+	}
 `;
 
 function CList({ loading, error, items, loadingComponent }) {
