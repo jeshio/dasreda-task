@@ -1,3 +1,7 @@
+## GitHub Repositories Catalog
+
+You can put your github-token at `.env` by [article](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line).
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
