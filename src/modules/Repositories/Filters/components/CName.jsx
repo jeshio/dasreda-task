@@ -2,20 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Input } from 'rsuite';
 
-function CLicense({ value, onChange }) {
+function CName({ value, onChange }) {
 	return (
 		<Input
 			style={{ width: 300 }}
-			placeholder="Лицензия..."
+			placeholder="Название..."
 			onChange={onChange}
 			value={value}
 		/>
 	);
 }
 
-CLicense.propTypes = {
+CName.propTypes = {
 	onChange: PropTypes.func.isRequired,
 	value: PropTypes.string.isRequired,
 };
 
-export default CLicense;
+export default CName;
