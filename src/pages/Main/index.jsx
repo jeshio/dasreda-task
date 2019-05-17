@@ -8,6 +8,7 @@ const Main = props => {
 		<Container>
 			<Content>
 				<Grid>
+					<Repositories.Filters />
 					<Repositories.List />
 				</Grid>
 			</Content>

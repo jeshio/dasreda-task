@@ -2,8 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { graphql } from 'react-apollo';
 import { compose } from 'recompose';
-import repositoriesList from './queries/repositoriesList';
+import { loader as graphqlLoader } from 'graphql.macro';
+import * as FiltersSubModule from 'src/modules/Repositories/Filters';
+import getSubModuleState from 'src/helpers/getSubModuleState';
 import Presentation from './Presentation';
+import { MODULE_NAME } from '../constants';
+
+const repositoriesListQuery = graphqlLoader(
+	'./queries/repositoriesList.graphql'
+);
 
 const minCreatedDate = () => {
 	// a month ago
@@ -19,15 +26,25 @@ const minCreatedDate = () => {
 };
 
 const graphqlQueries = [
-	graphql(repositoriesList(minCreatedDate()), {
+	graphql(repositoriesListQuery, {
 		name: 'repositoriesList',
+		options: ({ filtersState: { license } }) => {
+			let extraFilters = '';
+			if (license.length > 0) {
+				extraFilters += ` license:${license}`;
+			}
+			return {
+				variables: {
+					queryString: `language:JavaScript sort:stars created:>${minCreatedDate()}${extraFilters}`,
+				},
+			};
+		},
 	}),
 ];
 
 export class Container extends Component {
 	get repositoriesList() {
 		const { loading, error, search } = this.props.repositoriesList;
-		console.log(this.props.repositoriesList);
 
 		const items =
 			loading || error || !search
@@ -35,6 +52,7 @@ export class Container extends Component {
 				: search.edges.map(({ node }) => ({
 						...node,
 						stars: node.stargazers.totalCount,
+						license: node.licenseInfo ? node.licenseInfo.name : '',
 				  }));
 
 		return { ...this.props.repositoriesList, items };
@@ -47,7 +65,15 @@ export class Container extends Component {
 	}
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => {
+	const filtersState = getSubModuleState(
+		state,
+		MODULE_NAME,
+		FiltersSubModule.NAME
+	);
+
+	return { filtersState };
+};
 
 const mapDispatchToProps = {};
 

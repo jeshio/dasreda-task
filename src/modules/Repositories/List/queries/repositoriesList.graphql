@@ -1,0 +1,27 @@
+query RepositoriesList($queryString: String!) {
+	rateLimit {
+		cost
+		remaining
+		resetAt
+	}
+	search(query: $queryString, type: REPOSITORY, first: 50) {
+		repositoryCount
+		edges {
+			node {
+				... on Repository {
+					id
+					name
+					description
+					url
+					licenseInfo {
+						name
+					}
+					stargazers {
+						totalCount
+					}
+					createdAt
+				}
+			}
+		}
+	}
+}

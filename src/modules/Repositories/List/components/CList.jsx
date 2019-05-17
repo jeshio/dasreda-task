@@ -25,20 +25,25 @@ function CList({ loading, error, items }) {
 
 	return (
 		<Root>
-			{items.map(({ id, name, description, url, createdAt, stars }) => (
-				<ListItem key={id}>
-					<Name>
-						<a href={url} target="_blank" rel="noopener noreferrer">
-							{name}
-						</a>
-					</Name>
-					<Description>{description}</Description>
-					<Footer>
-						<div>Количество звёзд {stars}</div>
-						<div>Создан {createdAt}</div>
-					</Footer>
-				</ListItem>
-			))}
+			{items.map(
+				({ id, name, description, url, license, createdAt, stars }) => (
+					<ListItem key={id}>
+						<Name>
+							<a href={url} target="_blank" rel="noopener noreferrer">
+								{name}
+							</a>
+						</Name>
+						<Description>{description}</Description>
+						<Footer>
+							<div>
+								<span>Лицензия {license || 'не установлена'}</span>, количество
+								звёзд {stars}
+							</div>
+							<div>Создан {createdAt}</div>
+						</Footer>
+					</ListItem>
+				)
+			)}
 		</Root>
 	);
 }
