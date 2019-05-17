@@ -1,12 +1,13 @@
-query RepositoriesList($queryString: String!) {
+query RepositoriesList($queryString: String!, $cursor: String) {
 	rateLimit {
 		cost
 		remaining
 		resetAt
 	}
-	search(query: $queryString, type: REPOSITORY, first: 50) {
+	search(query: $queryString, type: REPOSITORY, first: 10, after: $cursor) {
 		repositoryCount
 		edges {
+			cursor
 			node {
 				... on Repository {
 					id

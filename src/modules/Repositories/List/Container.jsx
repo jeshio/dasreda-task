@@ -13,17 +13,22 @@ const repositoriesListQuery = graphqlLoader(
 	'./queries/repositoriesList.graphql'
 );
 
+const getExtraQueryString = ({ license }) => {
+	let extraFilters = '';
+	if (license.length > 0) {
+		extraFilters += ` license:${license}`;
+	}
+
+	return `language:JavaScript sort:stars created:>=${getMonthAgoDate()}${extraFilters}`;
+};
+
 const graphqlQueries = [
 	graphql(repositoriesListQuery, {
 		name: 'repositoriesList',
 		options: ({ filtersState: { license } }) => {
-			let extraFilters = '';
-			if (license.length > 0) {
-				extraFilters += ` license:${license}`;
-			}
 			return {
 				variables: {
-					queryString: `language:JavaScript sort:stars created:>=${getMonthAgoDate()}${extraFilters}`,
+					queryString: getExtraQueryString({ license }),
 				},
 			};
 		},
@@ -39,7 +44,8 @@ export class Container extends Component {
 			loading || error || !search
 				? []
 				: search.edges
-						.map(({ node }) => ({
+						.map(({ node, cursor }) => ({
+							cursor,
 							...node,
 							stars: node.stargazers.totalCount,
 							license: node.licenseInfo ? node.licenseInfo.name : '',
@@ -49,9 +55,49 @@ export class Container extends Component {
 		return { ...this.props.repositoriesList, items };
 	}
 
+	get nextClickHandler() {
+		return () => {
+			const {
+				repositoriesList: { fetchMore, loading, error },
+				filtersState: { license },
+			} = this.props;
+			const {
+				repositoriesList: { items },
+			} = this;
+
+			if (loading || error || items.length === 0) return;
+
+			const lastCursor = items[items.length - 1].cursor;
+
+			fetchMore({
+				query: repositoriesListQuery,
+				variables: {
+					queryString: getExtraQueryString({ license }),
+					cursor: lastCursor,
+				},
+				updateQuery: (previousResult, { fetchMoreResult }) => {
+					return {
+						...previousResult,
+						search: {
+							...previousResult.search,
+							edges: [
+								...previousResult.search.edges,
+								...fetchMoreResult.search.edges,
+							],
+						},
+					};
+				},
+			});
+		};
+	}
+
 	render() {
 		return (
-			<Presentation {...this.props} repositoriesList={this.repositoriesList} />
+			<Presentation
+				{...this.props}
+				repositoriesList={this.repositoriesList}
+				onNextClick={this.nextClickHandler}
+			/>
 		);
 	}
 }
