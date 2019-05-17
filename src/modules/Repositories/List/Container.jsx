@@ -58,16 +58,13 @@ export class Container extends Component {
 	get nextClickHandler() {
 		return () => {
 			const {
-				repositoriesList: { fetchMore, loading, error },
+				repositoriesList: { fetchMore, loading, error, search },
 				filtersState: { license },
 			} = this.props;
-			const {
-				repositoriesList: { items },
-			} = this;
 
-			if (loading || error || items.length === 0) return;
+			if (loading || error || !search) return;
 
-			const lastCursor = items[items.length - 1].cursor;
+			const lastCursor = search.edges[search.edges.length - 1].cursor;
 
 			fetchMore({
 				query: repositoriesListQuery,
