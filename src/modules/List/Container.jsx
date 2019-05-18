@@ -89,7 +89,6 @@ export class Container extends Component {
 	render() {
 		return (
 			<Presentation
-				{...this.props}
 				repositoriesList={this.repositoriesList}
 				onNextClick={this.nextClickHandler}
 			/>

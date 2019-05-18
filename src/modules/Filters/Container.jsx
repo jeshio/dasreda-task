@@ -7,7 +7,12 @@ import { NAME } from './constants';
 
 export class Container extends Component {
 	render() {
-		return <Presentation {...this.props} />;
+		return (
+			<Presentation
+				subModuleStore={this.props.subModuleStore}
+				actions={this.props.actions}
+			/>
+		);
 	}
 }
 
