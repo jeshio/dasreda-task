@@ -11,22 +11,13 @@ const repositoriesListQuery = graphqlLoader(
 	'./queries/repositoriesList.graphql'
 );
 
-const getExtraQueryString = ({ license }) => {
-	let extraFilters = '';
-	if (license.length > 0) {
-		extraFilters += ` license:${license}`;
-	}
-
-	return `language:JavaScript sort:stars created:>=${getMonthAgoDate()}${extraFilters}`;
-};
-
 const graphqlQueries = [
 	graphql(repositoriesListQuery, {
 		name: 'repositoriesList',
 		options: ({ filtersState: { license } }) => {
 			return {
 				variables: {
-					queryString: getExtraQueryString({ license }),
+					queryString: Container.getQueryString({ license }),
 				},
 			};
 		},
@@ -34,6 +25,15 @@ const graphqlQueries = [
 ];
 
 export class Container extends Component {
+	static getQueryString = ({ license }) => {
+		let extraFilters = '';
+		if (license.length > 0) {
+			extraFilters += ` license:${license}`;
+		}
+
+		return `language:JavaScript sort:stars created:>=${getMonthAgoDate()}${extraFilters}`;
+	};
+
 	get repositoriesList() {
 		const { loading, error, search } = this.props.repositoriesList;
 		const { filtersState } = this.props;
@@ -67,7 +67,7 @@ export class Container extends Component {
 			fetchMore({
 				query: repositoriesListQuery,
 				variables: {
-					queryString: getExtraQueryString({ license }),
+					queryString: Container.getQueryString({ license }),
 					cursor: lastCursor,
 				},
 				updateQuery: (previousResult, { fetchMoreResult }) => {

@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import CLicense from './components/CLicense';
 import styled from 'styled-components';
 import CName from './components/CName';
@@ -21,15 +22,24 @@ const Field = styled.div`
 `;
 
 export default class Presentation extends PureComponent {
+	static propTypes = {
+		licenses: PropTypes.arrayOf(PropTypes.object),
+	};
+
+	static defaultProps = {
+		licenses: [],
+	};
+
 	handleChangeFilter = name => value =>
-		this.props.actions.changeFilters({ [name]: value });
+		this.props.actions.changeFilters({ [name]: value || '' });
 
 	render() {
-		const { subModuleStore } = this.props;
+		const { subModuleStore, licenses } = this.props;
 		return (
 			<Root>
 				<Field>
 					<CLicense
+						licenses={licenses}
 						value={subModuleStore.license}
 						onChange={this.handleChangeFilter('license')}
 					/>
