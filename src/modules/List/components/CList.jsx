@@ -12,6 +12,11 @@ const Name = styled.h3`
 	margin: 0;
 	text-overflow: ellipsis;
 	overflow: hidden;
+	text-align: center;
+
+	@media ${mediaDevices.tablet} {
+		text-align: left;
+	}
 `;
 const Description = styled.p`
 	padding: 0.5rem 1rem;

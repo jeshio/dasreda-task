@@ -6,8 +6,11 @@ import CList from './components/CList';
 import CLoading from './components/CLoading';
 
 const Root = styled.div`
-	text-align: center;
 	padding-bottom: 3rem;
+`;
+
+const Footer = styled.div`
+	text-align: center;
 `;
 
 export default class Presentation extends PureComponent {
@@ -21,9 +24,13 @@ export default class Presentation extends PureComponent {
 		return (
 			<Root>
 				<CList {...repositoriesList} loadingComponent={<CLoading />} />
-				<Button onClick={onNextClick} appearance="primary">
-					Загрузить ещё
-				</Button>
+				{repositoriesList.items.length >= 10 && (
+					<Footer>
+						<Button onClick={onNextClick} appearance="primary">
+							Загрузить ещё
+						</Button>
+					</Footer>
+				)}
 			</Root>
 		);
 	}
