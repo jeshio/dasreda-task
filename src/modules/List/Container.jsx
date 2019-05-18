@@ -3,10 +3,8 @@ import { connect } from 'react-redux';
 import { graphql } from 'react-apollo';
 import { compose } from 'recompose';
 import { loader as graphqlLoader } from 'graphql.macro';
-import * as FiltersSubModule from 'src/modules/Repositories/Filters';
-import getSubModuleState from 'src/helpers/getSubModuleState';
+import * as FiltersModule from 'src/modules/Filters';
 import Presentation from './Presentation';
-import { MODULE_NAME } from '../constants';
 import getMonthAgoDate from './utils/getMonthAgoDate';
 
 const repositoriesListQuery = graphqlLoader(
@@ -99,12 +97,8 @@ export class Container extends Component {
 	}
 }
 
-const mapStateToProps = state => {
-	const filtersState = getSubModuleState(
-		state,
-		MODULE_NAME,
-		FiltersSubModule.NAME
-	);
+const mapStateToProps = store => {
+	const filtersState = store[FiltersModule.NAME];
 
 	return { filtersState };
 };

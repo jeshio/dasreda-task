@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import getSubModuleState from 'src/helpers/getSubModuleState';
 import Presentation from './Presentation';
 import * as actions from './store/actions';
 import { bindActionCreators } from 'redux';
-import { MODULE_NAME } from '../constants';
 import { NAME } from './constants';
 
 export class Container extends Component {
@@ -14,7 +12,7 @@ export class Container extends Component {
 }
 
 const mapStateToProps = store => {
-	const state = getSubModuleState(store, MODULE_NAME, NAME);
+	const state = store[NAME];
 	return {
 		subModuleStore: state,
 	};

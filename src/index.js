@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { ApolloProvider } from 'react-apollo';
 import ReactDOM from 'react-dom';
 import 'rsuite/dist/styles/rsuite.min.css';
-import Main from './pages/Main';
+import App from 'src/modules/App';
 import * as serviceWorker from './serviceWorker';
 import configureStore from './configureStore';
 import configApolloClient from './configApolloClient';
@@ -19,7 +19,7 @@ const AppWithProviders = AppComponent => (
 	</ApolloProvider>
 );
 
-ReactDOM.render(AppWithProviders(Main), document.getElementById('root'));
+ReactDOM.render(AppWithProviders(App), document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

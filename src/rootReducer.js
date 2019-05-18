@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import * as Repositories from './modules/Repositories';
+import * as Filters from 'src/modules/Filters';
 
 export default combineReducers({
-	[Repositories.MODULE_NAME]: Repositories.moduleReducer,
+	[Filters.NAME]: Filters.reducer,
 });

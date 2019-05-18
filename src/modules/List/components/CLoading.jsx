@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Spinner from 'src/modules/UI/Components/Spinner';
+import Spinner from 'src/modules/UIComponents/Spinner';
 
 const Root = styled.div`
 	text-align: center;
