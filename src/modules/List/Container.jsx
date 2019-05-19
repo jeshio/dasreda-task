@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { graphql } from 'react-apollo';
 import { compose } from 'recompose';
 import { loader as graphqlLoader } from 'graphql.macro';
+import withDebouncedProps from 'react-debounced-props';
 import * as FiltersModule from 'src/modules/Filters';
+import debounce from 'src/utils/debounce';
 import Presentation from './Presentation';
 import getMonthAgoDate from './utils/getMonthAgoDate';
 
@@ -14,10 +16,13 @@ const repositoriesListQuery = graphqlLoader(
 const graphqlQueries = [
 	graphql(repositoriesListQuery, {
 		name: 'repositoriesList',
-		options: ({ filtersState: { license } }) => {
+		options: ({
+			filtersState: { license },
+			debounceFiltersState: { name },
+		}) => {
 			return {
 				variables: {
-					queryString: Container.getQueryString({ license }),
+					queryString: Container.getQueryString({ license, name }),
 				},
 			};
 		},
@@ -25,30 +30,27 @@ const graphqlQueries = [
 ];
 
 export class Container extends Component {
-	static getQueryString = ({ license }) => {
+	static getQueryString = ({ license, name }) => {
 		let extraFilters = '';
 		if (license.length > 0) {
 			extraFilters += ` license:${license}`;
 		}
 
-		return `language:JavaScript sort:stars created:>=${getMonthAgoDate()}${extraFilters}`;
+		return `language:JavaScript "${name}" in:name sort:stars created:>=${getMonthAgoDate()}${extraFilters}`;
 	};
 
 	get repositoriesList() {
 		const { loading, error, search } = this.props.repositoriesList;
-		const { filtersState } = this.props;
 
 		const items =
 			loading || error || !search
 				? []
-				: search.edges
-						.map(({ node, cursor }) => ({
-							cursor,
-							...node,
-							stars: node.stargazers.totalCount,
-							license: node.licenseInfo ? node.licenseInfo.name : '',
-						}))
-						.filter(({ name }) => String(name).includes(filtersState.name));
+				: search.edges.map(({ node, cursor }) => ({
+						cursor,
+						...node,
+						stars: node.stargazers.totalCount,
+						license: node.licenseInfo ? node.licenseInfo.name : '',
+				  }));
 
 		return { ...this.props.repositoriesList, items };
 	}
@@ -58,6 +60,7 @@ export class Container extends Component {
 			const {
 				repositoriesList: { fetchMore, loading, error, search },
 				filtersState: { license },
+				debounceFiltersState: { name },
 			} = this.props;
 
 			if (loading || error || !search) return;
@@ -67,7 +70,7 @@ export class Container extends Component {
 			fetchMore({
 				query: repositoriesListQuery,
 				variables: {
-					queryString: Container.getQueryString({ license }),
+					queryString: Container.getQueryString({ license, name }),
 					cursor: lastCursor,
 				},
 				updateQuery: (previousResult, { fetchMoreResult }) => {
@@ -99,7 +102,7 @@ export class Container extends Component {
 const mapStateToProps = store => {
 	const filtersState = store[FiltersModule.NAME];
 
-	return { filtersState };
+	return { filtersState, debounceFiltersState: filtersState };
 };
 
 const mapDispatchToProps = {};
@@ -109,5 +112,6 @@ export default compose(
 		mapStateToProps,
 		mapDispatchToProps
 	),
+	withDebouncedProps(['debounceFiltersState'], f => debounce(f, 500)),
 	...graphqlQueries
 )(Container);
