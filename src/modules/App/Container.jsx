@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import Presentation from './Presentation';
 
 export class Container extends Component {
@@ -8,11 +7,4 @@ export class Container extends Component {
 	}
 }
 
-const mapStateToProps = state => ({});
-
-const mapDispatchToProps = {};
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Container);
+export default Container;

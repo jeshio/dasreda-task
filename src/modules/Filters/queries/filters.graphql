@@ -1,0 +1,6 @@
+query {
+	filters @client {
+		name
+		license
+	}
+}

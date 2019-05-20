@@ -1,0 +1,4 @@
+extend type Filters {
+	name: String
+	license: String
+}

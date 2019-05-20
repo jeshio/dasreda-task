@@ -1,0 +1,3 @@
+mutation updateFilters($filters: Filters) {
+	updateFilters(filters: $filters) @client
+}

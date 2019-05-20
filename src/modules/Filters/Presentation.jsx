@@ -24,6 +24,7 @@ const Field = styled.div`
 export default class Presentation extends PureComponent {
 	static propTypes = {
 		licenses: PropTypes.arrayOf(PropTypes.object),
+		onFiltersUpdate: PropTypes.func.isRequired,
 	};
 
 	static defaultProps = {
@@ -31,22 +32,22 @@ export default class Presentation extends PureComponent {
 	};
 
 	handleChangeFilter = name => value =>
-		this.props.actions.changeFilters({ [name]: value || '' });
+		this.props.onFiltersUpdate({ [name]: value || '' });
 
 	render() {
-		const { subModuleStore, licenses } = this.props;
+		const { filters, licenses } = this.props;
 		return (
 			<Root>
 				<Field>
 					<CLicense
 						licenses={licenses}
-						value={subModuleStore.license}
+						value={filters.license}
 						onChange={this.handleChangeFilter('license')}
 					/>
 				</Field>
 				<Field>
 					<CName
-						value={subModuleStore.name}
+						value={filters.name}
 						onChange={this.handleChangeFilter('name')}
 					/>
 				</Field>

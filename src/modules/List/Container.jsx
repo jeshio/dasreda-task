@@ -1,24 +1,27 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { graphql } from 'react-apollo';
 import { compose } from 'recompose';
 import { loader as graphqlLoader } from 'graphql.macro';
-import withDebouncedProps from 'react-debounced-props';
-import * as FiltersModule from 'src/modules/Filters';
-import debounce from 'src/utils/debounce';
 import Presentation from './Presentation';
 import getMonthAgoDate from './utils/getMonthAgoDate';
 
 const repositoriesListQuery = graphqlLoader(
 	'./queries/repositoriesList.graphql'
 );
+const filtersQuery = graphqlLoader(
+	'src/modules/Filters/queries/filters.graphql'
+);
 
 const graphqlQueries = [
+	graphql(filtersQuery, {
+		name: 'filtersList',
+	}),
 	graphql(repositoriesListQuery, {
 		name: 'repositoriesList',
 		options: ({
-			filtersState: { license },
-			debounceFiltersState: { name },
+			filtersList: {
+				filters: { license = '', name = '' },
+			},
 		}) => {
 			return {
 				variables: {
@@ -90,6 +93,8 @@ export class Container extends Component {
 	}
 
 	render() {
+		console.log(this.props);
+
 		return (
 			<Presentation
 				repositoriesList={this.repositoriesList}
@@ -99,19 +104,4 @@ export class Container extends Component {
 	}
 }
 
-const mapStateToProps = store => {
-	const filtersState = store[FiltersModule.NAME];
-
-	return { filtersState, debounceFiltersState: filtersState };
-};
-
-const mapDispatchToProps = {};
-
-export default compose(
-	connect(
-		mapStateToProps,
-		mapDispatchToProps
-	),
-	withDebouncedProps(['debounceFiltersState'], f => debounce(f, 500)),
-	...graphqlQueries
-)(Container);
+export default compose(...graphqlQueries)(Container);

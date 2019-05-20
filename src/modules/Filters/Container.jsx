@@ -1,48 +1,40 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { graphql } from 'react-apollo';
 import { compose } from 'recompose';
 import { loader as graphqlLoader } from 'graphql.macro';
 import Presentation from './Presentation';
-import * as actions from './store/actions';
-import { bindActionCreators } from 'redux';
-import { NAME } from './constants';
 
 const licensesListQuery = graphqlLoader('./queries/licensesList.graphql');
+const updateFiltersQuery = graphqlLoader('./queries/updateFilters.graphql');
+const filtersQuery = graphqlLoader('./queries/filters.graphql');
 
 const graphqlQueries = [
+	graphql(filtersQuery, {
+		name: 'filtersList',
+	}),
 	graphql(licensesListQuery, {
 		name: 'licensesList',
+	}),
+	graphql(updateFiltersQuery, {
+		props: ({ mutate }) => ({
+			updateFilters: filters => mutate({ variables: { filters } }),
+		}),
 	}),
 ];
 
 export class Container extends Component {
 	render() {
+		console.log(this.props);
+
 		return (
 			<Presentation
-				subModuleStore={this.props.subModuleStore}
+				filters={this.props.filtersList.filters}
 				actions={this.props.actions}
 				licenses={this.props.licensesList.licenses}
+				onFiltersUpdate={this.props.updateFilters}
 			/>
 		);
 	}
 }
 
-const mapStateToProps = store => {
-	const state = store[NAME];
-	return {
-		subModuleStore: state,
-	};
-};
-
-const mapDispatchToProps = dispatch => ({
-	actions: bindActionCreators(actions, dispatch),
-});
-
-export default compose(
-	connect(
-		mapStateToProps,
-		mapDispatchToProps
-	),
-	...graphqlQueries
-)(Container);
+export default compose(...graphqlQueries)(Container);

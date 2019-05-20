@@ -1,21 +1,16 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 import { ApolloProvider } from 'react-apollo';
 import ReactDOM from 'react-dom';
 import 'rsuite/dist/styles/rsuite.min.css';
 import App from 'src/modules/App';
 import * as serviceWorker from './serviceWorker';
-import configureStore from './configureStore';
 import configApolloClient from './configApolloClient';
 
-const store = configureStore();
 const apolloClient = configApolloClient();
 
 const AppWithProviders = AppComponent => (
 	<ApolloProvider client={apolloClient}>
-		<Provider store={store}>
-			<AppComponent />
-		</Provider>
+		<AppComponent />
 	</ApolloProvider>
 );
 
