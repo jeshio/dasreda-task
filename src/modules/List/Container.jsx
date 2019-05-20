@@ -66,8 +66,9 @@ export class Container extends Component {
 		return () => {
 			const {
 				repositoriesList: { fetchMore, loading, error, search },
-				filtersState: { license },
-				debounceFiltersState: { name },
+				filtersList: {
+					filters: { license, name },
+				},
 			} = this.props;
 
 			if (loading || error || !search) return;
