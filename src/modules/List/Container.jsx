@@ -27,6 +27,10 @@ const graphqlQueries = [
 				variables: {
 					queryString: Container.getQueryString({ license, name }),
 				},
+				context: {
+					debounceKey: 'repositoriesList',
+					debounceTimeout: 500,
+				},
 			};
 		},
 	}),
@@ -93,8 +97,6 @@ export class Container extends Component {
 	}
 
 	render() {
-		console.log(this.props);
-
 		return (
 			<Presentation
 				repositoriesList={this.repositoriesList}

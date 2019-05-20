@@ -1,6 +1,8 @@
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import { ApolloLink } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
+import DebounceLink from 'apollo-link-debounce';
 import { loader as graphqlLoader } from 'graphql.macro';
 import gql from 'graphql-tag';
 
@@ -9,15 +11,19 @@ const typeDefs = graphqlLoader('./types.graphql');
 const GRAPHQL_API_URL = 'https://api.github.com/graphql';
 
 export default function configApolloClient() {
+	const DEFAULT_DEBOUNCE_TIMEOUT = 250;
 	const cache = new InMemoryCache();
-	const link = new HttpLink({
-		uri: GRAPHQL_API_URL,
-		headers: {
-			authorization: `Bearer ${
-				process.env.REACT_APP_GITHUB_PERSONAL_ACCESS_TOKEN
-			}`,
-		},
-	});
+	const link = ApolloLink.from([
+		new DebounceLink(DEFAULT_DEBOUNCE_TIMEOUT),
+		new HttpLink({
+			uri: GRAPHQL_API_URL,
+			headers: {
+				authorization: `Bearer ${
+					process.env.REACT_APP_GITHUB_PERSONAL_ACCESS_TOKEN
+				}`,
+			},
+		}),
+	]);
 
 	cache.writeData({
 		data: {

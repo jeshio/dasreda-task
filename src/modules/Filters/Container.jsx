@@ -24,8 +24,6 @@ const graphqlQueries = [
 
 export class Container extends Component {
 	render() {
-		console.log(this.props);
-
 		return (
 			<Presentation
 				filters={this.props.filtersList.filters}
