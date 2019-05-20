@@ -29,6 +29,10 @@ const Footer = styled.div`
 		justify-content: space-between;
 	}
 `;
+const EmptyResult = styled.div`
+	text-align: center;
+	padding: 2rem 0;
+`;
 
 function CList({ loading, error, items, loadingComponent }) {
 	if (loading) return loadingComponent;
@@ -55,6 +59,7 @@ function CList({ loading, error, items, loadingComponent }) {
 					</ListItem>
 				)
 			)}
+			{items.length === 0 && <EmptyResult>Список пуст.</EmptyResult>}
 		</Root>
 	);
 }
